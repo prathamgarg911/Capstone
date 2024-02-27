@@ -1,6 +1,6 @@
 from ultralytics import YOLO
 # from ultralytics.solutions import object_counter
-from ...ultralytics.solutions import object_counter
+from ultralytics.solutions import object_counter
 import cv2
 
 model = YOLO("model/yolov8n.pt")
