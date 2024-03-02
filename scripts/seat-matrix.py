@@ -1,18 +1,39 @@
 import cv2
+import os 
 from ultralytics import YOLO
+from datetime import datetime
+from datetime import date
 
-# Load the YOLOv8 model
-model = YOLO('model/yolov8n.pt')
+today = date.today()
+d1 = today.strftime("%d-%m-%Y")
+
+now = datetime.now()
+dt_string = now.strftime("%H:%M")
+
 
 # Open the video file
-video_path = "4thfloor.mp4"
+video_name = '4thfloor.mp4'
+
+video_path = f"../data/{video_name}"
+
 cap = cv2.VideoCapture(video_path)
 
 
 w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
-frameSize = (1280, 720)
+frameSize = (w, h)
 
-out = cv2.VideoWriter('output_video2.mp4',cv2.VideoWriter_fourcc(*'MP4V'), fps, frameSize)
+os.makedirs(f'../results/{d1}',exist_ok = True)
+
+name = video_name.split(".")[0]
+
+print(name)
+print(f'../results/{d1}/{name}_{dt_string}')
+
+out = cv2.VideoWriter(f'../results/{d1}/{name}_{dt_string}.mp4',cv2.VideoWriter_fourcc(*'MP4V'), fps, frameSize)
+
+
+# Load the YOLOv8 model
+model = YOLO('../models/yolov8m.pt')
 # Loop through the video frames
 while cap.isOpened():
     # Read a frame from the video
