@@ -1,0 +1,22 @@
+.app {
+  text-align: center;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-container {
+  flex: 1; /* Fill available vertical space */
+}
+
+h2 {
+  margin-top: 10px;
+}
+
+.chart-wrapper {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
