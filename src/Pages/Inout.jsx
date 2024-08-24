@@ -11,20 +11,29 @@ const Inout = () => {
       const entries = [];
       const exits = [];
 
-      const entryCount = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
-      const exitCount = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
+      // Bias entries data
+      entries.push({ hour: '08:00 - 09:00', count: Math.floor(Math.random() * (40 - 25 + 1)) + 25 });
+      entries.push({ hour: '09:00 - 10:00', count: Math.floor(Math.random() * (40 - 25 + 1)) + 25 });
+      entries.push({ hour: '10:00 - 11:00', count: Math.floor(Math.random() * (40 - 25 + 1)) + 25 });
+      entries.push({ hour: '11:00 - 12:00', count: Math.floor(Math.random() * (30 - 15 + 1)) + 15 });
+      entries.push({ hour: '12:00 - 13:00', count: Math.floor(Math.random() * (20 - 10 + 1)) + 10 });
+      entries.push({ hour: '13:00 - 14:00', count: Math.floor(Math.random() * (20 - 10 + 1)) + 10 });
+      entries.push({ hour: '14:00 - 15:00', count: Math.floor(Math.random() * (25 - 10 + 1)) + 10 });
+      entries.push({ hour: '15:00 - 16:00', count: Math.floor(Math.random() * (25 - 15 + 1)) + 15 });
+      entries.push({ hour: '16:00 - 17:00', count: Math.floor(Math.random() * (20 - 10 + 1)) + 10 });
+      entries.push({ hour: '17:00 - 18:00', count: Math.floor(Math.random() * (15 - 5 + 1)) + 5 });
 
-      entries.push({ hour: '08:00 - 09:00', count: entryCount });
-      exits.push({ hour: '08:00 - 09:00', count: exitCount });
-
-      for (let i = 9; i < 18; i++) {
-        const hourRange = `${i}:00 - ${i + 1}:00`;
-        const entryCount = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
-        const exitCount = Math.floor(Math.random() * (50 - 20 + 1)) + 20;
-
-        entries.push({ hour: hourRange, count: entryCount });
-        exits.push({ hour: hourRange, count: exitCount });
-      }
+      // Bias exits data
+      exits.push({ hour: '08:00 - 09:00', count: Math.floor(Math.random() * (15 - 5 + 1)) + 5 });
+      exits.push({ hour: '09:00 - 10:00', count: Math.floor(Math.random() * (20 - 10 + 1)) + 10 });
+      exits.push({ hour: '10:00 - 11:00', count: Math.floor(Math.random() * (25 - 15 + 1)) + 15 });
+      exits.push({ hour: '11:00 - 12:00', count: Math.floor(Math.random() * (25 - 15 + 1)) + 15 });
+      exits.push({ hour: '12:00 - 13:00', count: Math.floor(Math.random() * (35 - 20 + 1)) + 20 });
+      exits.push({ hour: '13:00 - 14:00', count: Math.floor(Math.random() * (35 - 20 + 1)) + 20 });
+      exits.push({ hour: '14:00 - 15:00', count: Math.floor(Math.random() * (30 - 15 + 1)) + 15 });
+      exits.push({ hour: '15:00 - 16:00', count: Math.floor(Math.random() * (30 - 20 + 1)) + 20 });
+      exits.push({ hour: '16:00 - 17:00', count: Math.floor(Math.random() * (25 - 10 + 1)) + 10 });
+      exits.push({ hour: '17:00 - 18:00', count: Math.floor(Math.random() * (20 - 5 + 1)) + 5 });
 
       setEntriesData(entries);
       setExitsData(exits);
@@ -33,17 +42,12 @@ const Inout = () => {
     generateRandomData();
 
     const handleResize = () => {
-      
       console.log('Window resized!');
-      
     };
 
-    
     window.addEventListener('resize', handleResize);
 
-    
     return () => {
-      // Clean up ResizeObserver here
       window.removeEventListener('resize', handleResize);
     };
   }, []);
@@ -76,6 +80,14 @@ const Inout = () => {
           </BarChart>
         </ResponsiveContainer>
         <h2>Exits per Hour</h2>
+      </div>
+      <div className="button-container">
+        <a href="/level1">
+          <button className="navigate-button">Go to Seat Matrix Level 1</button>
+        </a>
+        <a href="/Analysis">
+          <button className="navigate-button">Go to Data Analysis</button>
+        </a>
       </div>
     </div>
   );

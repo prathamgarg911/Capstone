@@ -11,7 +11,7 @@
 }
 
 h2 {
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .chart-wrapper {
@@ -19,4 +19,41 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.button-container {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.navigate-button {
+  margin: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-image: linear-gradient(to right, #ff7e5f, #feb47b); /* Gradient background */
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  display: inline-block;
+  margin: 10px;
+}
+
+.navigate-button:hover {
+  background-image: linear-gradient(to right, #feb47b, #ff7e5f); /* Reverse gradient on hover */
+  color: #e0e0e0;
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.navigate-button:focus {
+  outline: none;
+  background-image: linear-gradient(to right, #ff7e5f, #feb47b);
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
 }
