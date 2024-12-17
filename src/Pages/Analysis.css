@@ -22,7 +22,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('C:/Users/Lenovo/OneDrive/Desktop/ReactJs/capstone/images/1288678566.webp');
+  background-image: url('../images/1288678566.webp');
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;

@@ -58,7 +58,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('C:/Users/Lenovo/OneDrive/Desktop/ReactJs/capstone/images/1288678566.webp');
+  background-image: url('./images/1288678566.webp');
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -91,7 +91,7 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 10px;
+  
   height: 100%;
   box-sizing: border-box;
   overflow: hidden;
@@ -193,11 +193,11 @@ h1 {
 
 /* Replace color backgrounds with images */
 .seat.occupied {
-  background-image: url('C:/Users/Lenovo/OneDrive/Desktop/ReactJs/capstone/images/rc.png'); /* Path to your red chair icon */
+  background-image: url('./images/rc.png'); /* Path to your red chair icon */
 }
 
 .seat.vacant {
-  background-image: url('C:/Users/Lenovo/OneDrive/Desktop/ReactJs/capstone/images/fc.png'); /* Path to your green chair icon */
+  background-image: url('./images/fc.png'); /* Path to your green chair icon */
 }
 
 .seat:hover {

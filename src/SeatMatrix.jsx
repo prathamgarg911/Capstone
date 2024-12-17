@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import './SeatMatrix.css';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { PiArmchairFill } from "react-icons/pi";
+import { PiOfficeChairFill } from "react-icons/pi"
 
 const generateSeatLayout = (rowsConfig, seatData) => {
   const layout = [];
+  
   let seatIndex = 0;
 
   rowsConfig.forEach(({ count, seats }) => {
@@ -61,6 +65,7 @@ const getSeatRowsForLevel = (level) => {
 };
 
 const SeatMatrix = ({ level }) => {
+  const navigate= useNavigate()
   const [seatLayout, setSeatLayout] = useState([]);
   const [levels, setLevels] = useState([]);
 
@@ -76,6 +81,7 @@ const SeatMatrix = ({ level }) => {
   };
 
   const fetchSeats = () => {
+    
     // Fetch seat data for the given level
     axios.get(`http://127.0.0.1:8000/seats?floor_id=${level}`)
       .then((res) => {
@@ -102,52 +108,84 @@ const SeatMatrix = ({ level }) => {
     return totalVacantSeats;
   };
 
-  const handleSeatClick = (rowIndex, colIndex) => {
+  const   handleSeatClick = (rowIndex, colIndex) => {
     // Implement logic to handle seat click
   };
+  const setlevel =(e)=>{
+    console.log(e.target.value)
+    navigate(`../level${e.target.value}`,{ replace: true })
+  }
 
   return (
-    <div className="seat-matrix-container">
-      <h1>
+    <div>
+  <div>
+  <div className='text-center justify-around items-center p-4 flex text-white bg-[#640000]' >
+    <div className='font-bold '>
+
         Nava Nalanda Library, Thapar University -  
         <div className="cl"> Level {level}</div>
-      </h1>
-      <div className="background"></div>
-      <div className="main-layout">
-      <div className="entry-text">
-        <h2>Entry</h2>
+    </div>
+    <div className='flex gap-2'>
+
+    <Link to="/Inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link>
+    <Link to="/Analysis"><button className='p-2 bg-white text-[#640000] rounded'>Data Analysis</button></Link>
+    <div className='p-2 bg-white font-bold text-green-500  rounded'>Empty Seats : <span className='text-green-500'>
+      {getTotalVacantSeats()}
+      </span>
       </div>
-        <div className="seat-matrix">
+   <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
+   <option value="1">Level 1</option>
+    <option value="2">Level 2</option>
+    <option value="3">Level 3</option>
+    <option value="4">Level 4</option>
+   </select>
+    </div>
+      </div>
+  </div>
+   
+    <div className="flex flex-col  justify-center items-center w-full">
+    
+      <div className="background"></div>
+      {/* <div className='px-28 py-4 text-lg font-semibold mt-10 bg-white text-[#640000] rounded'>Empty Seats : {getTotalVacantSeats()}</div> */}
+      <div className="main-layout flex justify-center items-center ">
+      {/* <div className="entry-text">
+        <h2>Entry</h2>
+      </div> */}
+        <div className="seat-matrix items-center justify-center">
           {seatLayout.map((row, rowIndex) => (
             <div key={rowIndex} className={`column ${row.length === 4 ? 'left-align' : ''}`}>
               {row.map((seatStatus, colIndex) => (
                 <div
                   key={colIndex}
-                  className={`seat ${seatStatus}`}
+                  className='p-1  '
                   onClick={() => handleSeatClick(rowIndex, colIndex)}
                 >
+                  <PiOfficeChairFill className={`p-1 bg-white rounded-lg 
+                    ${seatStatus === 'occupied' ? 'text-red-500' : 'text-green-500'} 
+                     w-8 h-8`}></PiOfficeChairFill>
                 </div>
               ))}
             </div>
           ))}
         </div>
-        <div className="navigation-buttons">
-          <div className="total-vacant-seats">
+        {/* <div className="navigation-buttons"> */}
+          {/* <div className="total-vacant-seats">
             <h3>Total Empty Seats At Level {level}: {getTotalVacantSeats()}</h3>
-          </div>
+          </div> */}
 
           {/* Dynamically generate buttons based on available levels */}
-          {levels.map((lvl) => (
+          {/* {levels.map((lvl) => (
             <Link key={lvl.id} to={`/level${lvl.id}`}>
               <button>Level {lvl.id}</button>
             </Link>
-          ))}
+          ))} */}
 
           {/* Static navigation buttons */}
-          <Link to="/Inout"><button>In-out Data</button></Link>
-          <Link to="/Analysis"><button>Data Analysis</button></Link>
-        </div>
+          {/* <Link to="/Inout"><button>In-out Data</button></Link>
+          <Link to="/Analysis"><button>Data Analysis</button></Link> */}
+        {/* </div> */}
       </div>
+    </div>
     </div>
   );
 };

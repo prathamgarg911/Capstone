@@ -1,13 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
 import './Analysis.css';
+import { Link , useNavigate } from 'react-router-dom';
+
 
 const Analysis = () => {
+   const navigate= useNavigate()
   const [dayOfWeekData, setDayOfWeekData] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [weeklyData, setWeeklyData] = useState([]);
   const [peakHoursData, setPeakHoursData] = useState([]);
   const [dailyVisitorsData, setDailyVisitorsData] = useState([]);
+  const [chartNo, setChartNo] = useState(0);
+
+
+  const charts =[
+    <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={dayOfWeekData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="day" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="visitors" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer>,
+          <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={monthlyData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="visitors" fill="#8884d8" />
+          </BarChart>
+        </ResponsiveContainer>,
+        <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={weeklyData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="week" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="visitors" fill="#ff8042" />
+        </BarChart>
+      </ResponsiveContainer>,
+       <ResponsiveContainer width="100%" height={300}>
+       <LineChart data={peakHoursData}>
+         <CartesianGrid strokeDasharray="3 3" />
+         <XAxis dataKey="hour" />
+         <YAxis />
+         <Tooltip />
+         <Legend />
+         <Line type="monotone" dataKey="visitors" stroke="#ff8042" activeDot={{ r: 8 }} />
+       </LineChart>
+     </ResponsiveContainer>
+
+  ]
 
   useEffect(() => {
     // Simulate fetching data
@@ -92,10 +141,83 @@ const Analysis = () => {
     fetchDailyVisitorsData();
   }, []);
 
-  return (
-    <div className="analysis-container">
+  const setlevel =(e)=>{
+    console.log(e.target.value)
+    navigate(`../level${e.target.value}`,{ replace: true })
+  }
+
+  return (<>
+  <div className='flex flex-col gap-10'>
+     <div>
+            <div className='text-center justify-around items-center p-4 flex text-white bg-[#640000]' >
+              <div className='font-bold '>
+          
+                  Nava Nalanda Library, Thapar University 
+                  <div className="cl"> Daily Analytics</div>
+              </div>
+              <div className='flex gap-2 items-center justify-center'>
+          
+              <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
+              <option value="" disabled selected>Go to Level</option>
+       <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+        <option value="4">Level 4</option>
+       </select>
+              <Link to="/inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link>
+              {/* <div className='p-2 bg-white text-[#640000] rounded'>Empty Seats : {getTotalVacantSeats()}</div> */}
+             {/* <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
+             <option value="1">Level 1</option>
+              <option value="2">Level 2</option>
+              <option value="3">Level 3</option>
+              <option value="4">Level 4</option>
+             </select> */}
+              </div>
+                </div>
+            </div>
+            <div className="background"></div>
+            <div className='flex '>
+            <div className="flex flex-col  items-center  gap-8 p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
+            <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>FootFall</h2>
+            <div className='flex justify-around w-full'>
+
+            <button onClick={()=>setChartNo(0)} className={`text-white font-mono w-1/5 text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out  ${chartNo==0 ?"bg-[#640000]":"bg-slate-500" } `}>DAY</button>
+            <button onClick={()=>setChartNo(1)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==1 ?"bg-[#640000]":"bg-slate-500" } `}>WEEK</button>
+            <button onClick={()=>setChartNo(2)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==2 ?"bg-[#640000]":"bg-slate-500" } `}>MONTH</button>
+            <button onClick={()=>setChartNo(3)} className={`text-white font-mono w-1/5   text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==3 ?"bg-[#640000]":"bg-slate-500" } `}>PEAK HOUR</button>
+            </div>
+          {/* <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={dayOfWeekData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="day" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="visitors" fill="#82ca9d" />
+            </BarChart>
+          </ResponsiveContainer> */}
+          {charts[chartNo]}
+        </div>
+        <div className="flex flex-col  items-center  gap-20 p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
+          <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Daily Visitors Histogram</h2>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={dailyVisitorsData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="day" />
+              <YAxis />
+              <Tooltip />
+              <Line type="step" dataKey="visitors" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+
+              </div>
+
+  </div>
+    {/* <div className="analysis-container">
       <h1>Library Footfall Analysis</h1>
       <div className="chart-container">
+
         <div className="chart-item">
           <h2>Footfall by Day of the Week</h2>
           <ResponsiveContainer width="100%" height={300}>
@@ -161,7 +283,8 @@ const Analysis = () => {
           </ResponsiveContainer>
         </div>
       </div>
-    </div>
+    </div> */}
+    </>
   );
 };
 
