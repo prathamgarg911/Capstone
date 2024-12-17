@@ -3,17 +3,50 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
+  height: 100%;
   overflow-x: hidden;
+  
+}
+.main-layout {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch; /* Stretch all children to match container height */
+  width: 100%;
+  height: 100vh; /* Fixed full viewport height */
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden; /* Prevent scrolling */
 }
 
-/* Container */
+/* Fixed Entry Text */
+.entry-text {
+  flex: 0 0 9%; /* Fixed 15% width for the "Entry" text */
+  background: rgba(0, 0, 0, 0.7); /* Dark background for contrast */
+  color: #b43f21; /* Professional color */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Fill full container height */
+  position: fixed; /* Fix it in place */
+  top: 0;
+  left: 0;
+  z-index: 2; /* Keep it above other elements */
+  text-transform: uppercase;
+  writing-mode: vertical-rl; /* Vertical text */
+  transform: rotate(180deg); /* Adjust text orientation */
+  font-size: 30px; /* Make text large and prominent */
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
 .seat-matrix-container {
   position: relative;
   width: 100%;
   height: 99vh; /* Set the container to cover 99% of the viewport height */
   display: flex;
   flex-direction: column;
-  overflow-y: auto; /* Ensure full screen scrolls if needed */
+  overflow-y:hidden; /* Ensure full screen scrolls if needed */
   margin-left: 2px;
   perspective: 1000px; /* Add perspective for 3D effect */
 }
@@ -48,6 +81,7 @@ body {
   height: 100%;
   background: rgba(0, 0, 0, 0.3); /* Dark overlay for better text contrast */
   z-index: 0;
+  overflow: hidden;
   pointer-events: none; /* Prevent overlay from interfering with clicks */
 }
 
@@ -60,6 +94,7 @@ body {
   padding: 10px;
   height: 100%;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 h1 {
@@ -90,24 +125,55 @@ h1 {
   align-items: center;
   justify-content: center;
   height: 80vh; /* Adjust to 80% of viewport height */
-  overflow-x: auto;
+  overflow-x: hidden;
   padding-right: 15px;
 }
+/*
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 15px; /* Adjust horizontal spacing between columns 
+  row-gap: 1px;
+  
+  transition: transform 0.2s ease;
+}
+
+.column:hover {
+  transform: scale(1.02);
+} 
+
+/* Seat Styles */
 
 .column {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0 5px;
+  row-gap: 1px;
   transition: transform 0.2s ease;
 }
 
+/* Apply different spacings for alternating columns */
+.column:nth-child(odd) {
+  margin-right: 20px; /* 4px spacing for odd columns */
+}
+
+.column:nth-child(even) {
+  margin-right: 50px; /* 6px spacing for even columns */
+}
+
+/* Ensure last column has no extra margin */
+.column:last-child {
+  margin-right: 0;
+}
+
+/* Add hover effect */
 .column:hover {
   transform: scale(1.02);
 }
 
-/* Seat Styles */
 .seat {
   margin: 3px;
   width: 35px;
