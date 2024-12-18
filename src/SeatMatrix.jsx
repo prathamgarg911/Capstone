@@ -54,7 +54,12 @@ const getSeatRowsForLevel = (level) => {
     case 1:
       return [
         {count:10, seats:8}, //80 seats
-      ]
+0    ]
+  
+      case 0:
+        return [
+          {count:10, seats:8}, //80 seats
+        ]
     default:
       return [
         { count: 4, seats: 7 },
@@ -70,6 +75,19 @@ const SeatMatrix = ({ level }) => {
   const [showAnalytics , setShowAnalytics] = useState(role)
   const [seatLayout, setSeatLayout] = useState([]);
   const [levels, setLevels] = useState([]);
+  const [inout, setInout] = useState(0);
+  const [out, setout] = useState(0);
+  const [totalSeats, setTotalSeats] = useState(0);
+  const [timestamp, setTimestamp] = useState(0);
+  const [perLevelOccupancy , setPerLevelOccupancy] =useState(
+    {
+      "0":0,
+      "1":0,
+      "2":0,
+      "3":0,
+      "4":0
+    }
+  )
 
   const fetchLevels = () => {
     // Fetch levels for buttons
@@ -95,12 +113,44 @@ const SeatMatrix = ({ level }) => {
       .catch((err) => {
         console.error(err);
       });
+      // axios.get(`http://localhost:8000/in-out-status/`)
+      // .then((res) => {
+      //   const seatData = res.data;
+      
+      //   
+      // })
+      // .catch((err) => {
+      //   console.error(err);
+      // });
+       // axios.get(`http://localhost:8000/total-occupancy-status/`)
+      // .then((res) => {
+      //   const seatData = res.data;
+        // setTotalSeats(res.data[0])
+        // setPerLevelOccupancy(res.data[1])
+        
+      //  
+      
+      // })
+      // .catch((err) => {
+      //   console.error(err);
+      // });
   };
 
   useEffect(() => {
     fetchLevels();
     fetchSeats();
   }, [level]);
+  setInterval(async () => {
+    var res = await fetch(`http://localhost:8000/total-occupancy-status/`);
+   
+        setTotalSeats(res.data.total_occupancy)
+        setPerLevelOccupancy(res.data.floor_data)
+        setTimestamp(res.data.timestamp)
+       
+    res = await fetch(`http://localhost:8000/in-out-status/`);
+    setInout(res.data.in)
+    setout(res.data.out)
+  }, 2000);
 
   const getTotalVacantSeats = () => {
     let totalVacantSeats = 0;
@@ -132,16 +182,23 @@ const SeatMatrix = ({ level }) => {
         <div className="cl"> Level {level}</div>
     </div>
     <div className='flex gap-2'>
+      <div className='p-2 bg-white font-bold text-green-500  rounded'>{timestamp} </div>
+      <div className='p-2 bg-white font-bold text-green-500  rounded'>IN: {inout} OUT: {out} </div>
   {showAnalytics=="admin" && <>
     {/* <Link to="/Inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link> */}
     <Link to="/Analysis"><button className='p-2 bg-white text-[#640000] rounded'> Analytics</button></Link>
   </>
   }
-    <div className='p-2 bg-white font-bold text-green-500  rounded'>Empty Seats : <span className='text-green-500'>
+    {/* <div className='p-2 bg-white font-bold text-green-500  rounded'>Total Studnts : <span className='text-green-500'>
       {getTotalVacantSeats()}
       </span>
       </div>
+    <div className='p-2 bg-white font-bold text-green-500  rounded'>Empty Seats : <span className='text-green-500'>
+      {getTotalVacantSeats()}
+      </span>
+      </div> */}
    <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
+   <option value="0">Level 0</option>
    <option value="1">Level 1</option>
     <option value="2">Level 2</option>
     <option value="3">Level 3</option>
@@ -155,7 +212,20 @@ const SeatMatrix = ({ level }) => {
     <div className="flex flex-col  justify-center items-center w-full">
     
       <div className="background"></div>
-      {/* <div className='px-28 py-4 text-lg font-semibold mt-10 bg-white text-[#640000] rounded'>Empty Seats : {getTotalVacantSeats()}</div> */}
+      <div className='px-28 py-4 text-lg font-semibold mt-10 bg-white text-[#640000] rounded flex gap-10 '>
+      <div className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded  '>
+
+        Empty Seats : {getTotalVacantSeats()}
+        </div>
+        <div className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>
+
+Total Seats : {totalSeats}
+        </div>
+    
+        </div>
+        <div>
+
+        </div>
       <div className="main-layout flex justify-center items-center ">
       {/* <div className="entry-text">
         <h2>Entry</h2>

@@ -46,8 +46,29 @@ const Analysis = () => {
     tickCount: 11,
     domain: [0, 100], // Adjust the domain if needed to fit your data range
   };
+  setInterval(async () => {
+    fetchGraphData()
+  }, 2000); 
 
+  const fetchGraphData = async (frequency,graph_number)=>{
+      const res = await axios.post("http://localhost:8000/graph", {
+        frequency:frequency,
+        graph_number:graph_number
+      })
 
+      if(frequency=="h"){
+       setPeakHoursData(res.data)   
+      }
+      if(frequency=="m"){
+       setMonthlyData(res.data)
+      }
+      if(frequency=="d"){
+        setDayOfWeekData(res.data)
+      }
+      if(frequency=="w"){
+        setWeeklyData(res.data)
+      }
+    }
 
 
   const charts =[
@@ -199,6 +220,7 @@ const Analysis = () => {
           
               <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
               <option value="" disabled selected>Go to Level</option>
+       <option value="0">Level 0</option>
        <option value="1">Level 1</option>
         <option value="2">Level 2</option>
         <option value="3">Level 3</option>
@@ -225,7 +247,7 @@ const Analysis = () => {
             <button onClick={()=>setChartNo(0)} className={`text-white font-mono w-1/5 text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out  ${chartNo==0 ?"bg-[#640000]":"bg-slate-500" } `}>DAY</button>
             <button onClick={()=>setChartNo(1)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==1 ?"bg-[#640000]":"bg-slate-500" } `}>WEEK</button>
             <button onClick={()=>setChartNo(2)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==2 ?"bg-[#640000]":"bg-slate-500" } `}>MONTH</button>
-            <button onClick={()=>setChartNo(3)} className={`text-white font-mono w-1/5   text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==3 ?"bg-[#640000]":"bg-slate-500" } `}>PEAK HOUR</button>
+            <button onClick={()=>setChartNo(3)} className={`text-white font-mono w-1/5   text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==3 ?"bg-[#640000]":"bg-slate-500" } `}>HOURLY</button>
             </div>
           {/* <ResponsiveContainer width="100%" height={300}>
             <BarChart data={dayOfWeekData}>
@@ -240,7 +262,7 @@ const Analysis = () => {
           {charts[chartNo]}
         </div>
         <div className="flex flex-col  items-center  gap-20 p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
-          <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Daily Visitors Histogram</h2>
+          <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Daily Visitors </h2>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={dailyVisitorsData}>
               <CartesianGrid strokeDasharray="3 3" />

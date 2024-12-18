@@ -42,10 +42,10 @@ floors = [
     Floor(id=2, name="First Floor"),
     Floor(id=3, name="Second Floor"),
     Floor(id=4, name="Third Floor"),
+    Floor(id=0, name="Third Floor"),
 ]
 
 seats = [
-    
     Seat(id=1, floor_id=1, number=1, is_occupied=False),
     Seat(id=2, floor_id=1, number=2, is_occupied=False),
     Seat(id=3, floor_id=1, number=3, is_occupied=True),
