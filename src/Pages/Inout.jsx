@@ -45,6 +45,10 @@ const Inout = () => {
     console.log(e.target.value)
     navigate(`../level${e.target.value}`,{ replace: true })
   }
+  const logout = (e)=>{
+    localStorage.removeItem("role")
+      navigate("../login")
+}
 
   return (
     <>
@@ -66,6 +70,7 @@ const Inout = () => {
     <option value="4">Level 4</option>
    </select>
           <Link to="/Analysis"><button className='p-2 bg-white text-[#640000] rounded'>Data Analysis</button></Link>
+          <button onClick={logout} className='p-2 bg-white text-[#640000] rounded'>Logout</button>
           {/* <div className='p-2 bg-white text-[#640000] rounded'>Empty Seats : {getTotalVacantSeats()}</div> */}
          {/* <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
          <option value="1">Level 1</option>

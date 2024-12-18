@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts';
 import './Analysis.css';
 import { Link , useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 const Analysis = () => {
@@ -12,6 +13,41 @@ const Analysis = () => {
   const [peakHoursData, setPeakHoursData] = useState([]);
   const [dailyVisitorsData, setDailyVisitorsData] = useState([]);
   const [chartNo, setChartNo] = useState(0);
+  const [chartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/in-out/');
+        const data = response.data.map(item => ({
+          hour: item.hour,
+          entries: item.entries,
+          exits: item.exits
+        }));
+        setChartData(data);
+      } catch (error) {
+        console.error("Error fetching in-out data:", error);
+      }
+    };
+
+    fetchData();
+    const handleResize = () => {
+      console.log('Window resized!');
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const axisSettings = {
+    tickCount: 11,
+    domain: [0, 100], // Adjust the domain if needed to fit your data range
+  };
+
+
 
 
   const charts =[
@@ -145,6 +181,10 @@ const Analysis = () => {
     console.log(e.target.value)
     navigate(`../level${e.target.value}`,{ replace: true })
   }
+  const logout = (e)=>{
+    localStorage.removeItem("role")
+      navigate("../login")
+}
 
   return (<>
   <div className='flex flex-col gap-10'>
@@ -153,7 +193,7 @@ const Analysis = () => {
               <div className='font-bold '>
           
                   Nava Nalanda Library, Thapar University 
-                  <div className="cl"> Daily Analytics</div>
+                  <div className="cl">  Analytics</div>
               </div>
               <div className='flex gap-2 items-center justify-center'>
           
@@ -164,7 +204,8 @@ const Analysis = () => {
         <option value="3">Level 3</option>
         <option value="4">Level 4</option>
        </select>
-              <Link to="/inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link>
+              {/* <Link to="/inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link> */}
+              <button onClick={logout} className='p-2 bg-white text-[#640000] rounded'>Logout</button>
               {/* <div className='p-2 bg-white text-[#640000] rounded'>Empty Seats : {getTotalVacantSeats()}</div> */}
              {/* <select placeholder="level" onChange={setlevel} className='p-2 bg-white text-[#640000] rounded'>
              <option value="1">Level 1</option>
@@ -175,7 +216,7 @@ const Analysis = () => {
               </div>
                 </div>
             </div>
-            <div className="background"></div>
+            <div className="background2"></div>
             <div className='flex '>
             <div className="flex flex-col  items-center  gap-8 p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
             <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>FootFall</h2>
@@ -211,6 +252,41 @@ const Analysis = () => {
           </ResponsiveContainer>
         </div>
 
+
+              </div>
+              <div className='flex '>
+                
+                        <div className="flex flex-col  items-center  gap-3 p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
+                        <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Entries per Hour</h2>
+                
+                        <ResponsiveContainer width="100%" height={400}>
+                          <BarChart data={chartData} barSize={25}>
+                          <XAxis type="category" dataKey="hour" />
+                          <YAxis type="number" {...axisSettings} />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="entries" fill="#8884d8" name="Entries" />
+                          </BarChart>
+                        </ResponsiveContainer>
+                
+                      </div>
+                       <div className="flex  flex-col gap-3  items-center  p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
+                            <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Exits per Hour</h2>
+                            <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={chartData} barSize={25}>
+                          <XAxis type="category" dataKey="hour" />
+                          <YAxis type="number" {...axisSettings} />
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="exits" fill="#82ca9d" name="Exits" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                      
+                             
+                            </div>
+
+                
               </div>
 
   </div>

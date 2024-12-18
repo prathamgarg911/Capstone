@@ -66,6 +66,8 @@ const getSeatRowsForLevel = (level) => {
 
 const SeatMatrix = ({ level }) => {
   const navigate= useNavigate()
+  const role = localStorage.getItem("role")
+  const [showAnalytics , setShowAnalytics] = useState(role)
   const [seatLayout, setSeatLayout] = useState([]);
   const [levels, setLevels] = useState([]);
 
@@ -115,6 +117,10 @@ const SeatMatrix = ({ level }) => {
     console.log(e.target.value)
     navigate(`../level${e.target.value}`,{ replace: true })
   }
+  const logout = (e)=>{
+      localStorage.removeItem("role")
+        navigate("../login")
+  }
 
   return (
     <div>
@@ -126,9 +132,11 @@ const SeatMatrix = ({ level }) => {
         <div className="cl"> Level {level}</div>
     </div>
     <div className='flex gap-2'>
-
-    <Link to="/Inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link>
-    <Link to="/Analysis"><button className='p-2 bg-white text-[#640000] rounded'>Data Analysis</button></Link>
+  {showAnalytics=="admin" && <>
+    {/* <Link to="/Inout"><button className='p-2 bg-white text-[#640000] rounded'>In-out Data</button></Link> */}
+    <Link to="/Analysis"><button className='p-2 bg-white text-[#640000] rounded'> Analytics</button></Link>
+  </>
+  }
     <div className='p-2 bg-white font-bold text-green-500  rounded'>Empty Seats : <span className='text-green-500'>
       {getTotalVacantSeats()}
       </span>
@@ -139,6 +147,7 @@ const SeatMatrix = ({ level }) => {
     <option value="3">Level 3</option>
     <option value="4">Level 4</option>
    </select>
+   <button onClick={logout} className='p-2 bg-white text-[#640000] rounded'>Logout</button>
     </div>
       </div>
   </div>

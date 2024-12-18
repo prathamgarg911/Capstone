@@ -4,6 +4,7 @@ import SeatMatrix from './SeatMatrix';
 import Inout from './Pages/Inout';
 import Analysis from './Pages/Analysis';
 import axios from 'axios';
+import Login from "./Pages/Login"
 
 function App() {
   const [levels, setLevels] = useState([]);
@@ -41,6 +42,7 @@ function App() {
           {/* Static routes */}
           <Route path="/Inout" element={<Inout />} />
           <Route path="/Analysis" element={<Analysis />} />
+          <Route path="/Login" element={<Login />} />
         </Routes>
       </div>
     </BrowserRouter>
