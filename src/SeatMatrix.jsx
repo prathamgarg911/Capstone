@@ -88,6 +88,21 @@ const SeatMatrix = ({ level }) => {
       "4":0
     }
   )
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     const randomIncrement = Math.floor(Math.random() * 2) + 1; // Random value between 1 and 2
+  //     const randomChoice = Math.random() > 0.5; // Randomly decide whether to increase inout or out
+
+  //     if (randomChoice) {
+  //       setInout(prevInout => prevInout + randomIncrement);
+  //     } else {
+  //       setout(prevOut => prevOut + randomIncrement);
+  //     }
+  //   }, 3000); // Update every 3 seconds
+
+  //   // Cleanup the interval on component unmount
+  //   return () => clearInterval(intervalId);
+  // }, []);
 
   const fetchLevels = () => {
     // Fetch levels for buttons
