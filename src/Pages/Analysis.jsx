@@ -13,42 +13,142 @@ const Analysis = () => {
   const [peakHoursData, setPeakHoursData] = useState([]);
   const [dailyVisitorsData, setDailyVisitorsData] = useState([]);
   const [chartNo, setChartNo] = useState(0);
-  const [chartData, setChartData] = useState([]);
+  const [chartNo1, setChartNo1] = useState(0);
+  const [chartNo2, setChartNo2] = useState(0);
+  const [chartData, setChartData] = useState([ { "hour": "08:00", "entries": 0, "exits": 1 }, { "hour": "09:00", "entries": 0, "exits": 1 }, { "hour": "10:00", "entries": 0, "exits": 1 }, { "hour": "11:00", "entries": 0, "exits": 1 }, { "hour": "12:00", "entries": 0, "exits": 1 }, { "hour": "13:00", "entries": 0, "exits": 1 }, { "hour": "14:00", "entries": 0, "exits": 1 }, { "hour": "15:00", "entries": 1, "exits": 1 }, { "hour": "16:00", "entries": 1, "exits": 1 }, { "hour": "17:00", "entries": 3, "exits": 0 } ]);
+  const [chartDataday, setChartDataday] = useState([
+    { "day": "Sunday", "entries": 5, "exits": 10 },
+    { "day": "Monday", "entries": 8, "exits": 7 },
+    { "day": "Tuesday", "entries": 10, "exits": 12 },
+    { "day": "Wednesday", "entries": 7, "exits": 9 },
+    { "day": "Thursday", "entries": 9, "exits": 8 },
+    { "day": "Friday", "entries": 12, "exits": 10 },
+    { "day": "Saturday", "entries": 6, "exits": 5 }
+  ]
+  )
+  const [chartDataweek, setChartDataweek] = useState([
+    { "week": "Week 1", "entries": 50, "exits": 60 },
+    { "week": "Week 2", "entries": 55, "exits": 52 },
+    { "week": "Week 3", "entries": 48, "exits": 50 },
+    { "week": "Week 4", "entries": 60, "exits": 55 }
+  ]
+  )
+  const [chartDatamonth, setChartDatamonth] = useState([
+    { "month": "January", "entries": 600, "exits": 620 },
+    { "month": "February", "entries": 580, "exits": 590 },
+    { "month": "March", "entries": 610, "exits": 600 },
+    { "month": "April", "entries": 620, "exits": 610 },
+    { "month": "May", "entries": 630, "exits": 640 },
+    { "month": "June", "entries": 650, "exits": 660 },
+    { "month": "July", "entries": 670, "exits": 680 },
+    { "month": "August", "entries": 700, "exits": 690 },
+    { "month": "September", "entries": 720, "exits": 710 },
+    { "month": "October", "entries": 740, "exits": 730 },
+    { "month": "November", "entries": 750, "exits": 740 },
+    { "month": "December", "entries": 770, "exits": 760 }
+  ]
+  )
+  
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/in-out/');
-        const data = response.data.map(item => ({
-          hour: item.hour,
-          entries: item.entries,
-          exits: item.exits
-        }));
-        setChartData(data);
-      } catch (error) {
-        console.error("Error fetching in-out data:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response = await axios.get('http://127.0.0.1:8000/in-out/');
+  //       const data = response.data.map(item => ({
+  //         hour: item.hour,
+  //         entries: item.entries,
+  //         exits: item.exits
+  //       }));
+  //       console.log(data)
+  //       setChartData(data);
+  //     } catch (error) {
+  //       console.error("Error fetching in-out data:", error);
+  //     }
+  //   };
 
-    fetchData();
-    const handleResize = () => {
-      console.log('Window resized!');
-    };
+  //   fetchData();
+  //   const handleResize = () => {
+  //     console.log('Window resized!');
+  //   };
 
-    window.addEventListener('resize', handleResize);
+  //   window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   const axisSettings = {
     tickCount: 11,
     domain: [0, 100], // Adjust the domain if needed to fit your data range
   };
-  setInterval(async () => {
-    fetchGraphData()
-  }, 2000); 
+  // setInterval(async () => {
+  //   fetchGraphData( )
+  // }, 2000); 
+   // setInterval(async () => {
+  //   fetchGraphData( )
+  // }, 2000);
+  let graphData = [];
+
+// Function to generate random data
+const generateRandomData = (labelKey, labels) => {
+  if(labelKey =="hour")  return labels.map(label => ({
+    [labelKey]: label,
+    entries: Math.floor(Math.random() * 21), // Random entries (0-20)
+    exits: Math.floor(Math.random() * 21)   // Random exits (0-20)
+  }));
+  else if (labelKey=="day") return labels.map(label => ({
+    [labelKey]: label,
+    entries: Math.floor(Math.random() * 100), // Random entries (0-20)
+    exits: Math.floor(Math.random() * 100)   // Random exits (0-20)
+  }));
+  else if (labelKey=="month") return labels.map(label => ({
+    [labelKey]: label,
+    entries: Math.floor(Math.random() * 10000), // Random entries (0-20)
+    exits: Math.floor(Math.random() * 10000)   // Random exits (0-20)
+  }));
+  else if (labelKey=="week") return labels.map(label => ({
+    [labelKey]: label,
+    entries: Math.floor(Math.random() * 1000), // Random entries (0-20)
+    exits: Math.floor(Math.random() * 1000)   // Random exits (0-20)
+  }));
+};
+
+// Labels for each graph
+const labels = {
+  hour: ["08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"],
+  day: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  week: ["Week 1", "Week 2", "Week 3", "Week 4"],
+  month: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October"]
+};
+
+// Function to update data for all graphs
+const updateGraphData = () => {
+  // graphData = [
+  //   generateRandomData("hour", labels.hour),
+  //   generateRandomData("day", labels.day),
+  //   generateRandomData("week", labels.week),
+  //   generateRandomData("month", labels.month)
+  // ];
+  setChartDataday( generateRandomData("day", labels.day))
+  setChartDatamonth( generateRandomData("month", labels.month))
+  setChartDataweek( generateRandomData("week", labels.week))
+  setChartData( generateRandomData("hour", labels.hour),)
+  console.log("Updated Graph Data:", graphData);
+};
+
+// Update data every 10 seconds
+useEffect(() => {
+  const intervalId = setInterval(updateGraphData, 5000);
+
+  // Cleanup interval on component unmount
+  return () => clearInterval(intervalId);
+}, []); // Empty dependency array ensures this runs once
+
+
+// Initial data generation
+// updateGraphData();
+
 
   const fetchGraphData = async (frequency,graph_number)=>{
       const res = await axios.post("http://localhost:8000/graph", {
@@ -103,6 +203,16 @@ const Analysis = () => {
         </BarChart>
       </ResponsiveContainer>,
        <ResponsiveContainer width="100%" height={300}>
+       <BarChart data={peakHoursData}>
+         <CartesianGrid strokeDasharray="3 3" />
+         <XAxis dataKey="hour" />
+         <YAxis />
+         <Tooltip />
+         <Legend />
+         <Bar dataKey="visitors" fill="#ff8042" />
+       </BarChart>
+     </ResponsiveContainer>,
+       <ResponsiveContainer width="100%" height={300}>
        <LineChart data={peakHoursData}>
          <CartesianGrid strokeDasharray="3 3" />
          <XAxis dataKey="hour" />
@@ -114,6 +224,85 @@ const Analysis = () => {
      </ResponsiveContainer>
 
   ]
+  const charts2 =[ <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={chartData} barSize={25}>
+      <XAxis type="category" dataKey="hour" />
+      <YAxis type="number" {...axisSettings} />
+      <CartesianGrid strokeDasharray="3 3" />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="exits" fill="#82ca9d" name="Exits" />
+    </BarChart>
+  </ResponsiveContainer>, <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={chartDataweek} barSize={25}>
+                          <XAxis type="category" dataKey="week" />
+                          <YAxis type="number" {...axisSettings} />
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="exits" fill="#82ca9d" name="Exits" />
+                        </BarChart>
+                      </ResponsiveContainer>, <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={chartDatamonth} barSize={25}>
+                          <XAxis type="category" dataKey="month" />
+                          <YAxis type="number" {...axisSettings} />
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="exits" fill="#82ca9d" name="Exits" />
+                        </BarChart>
+                      </ResponsiveContainer>, <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={chartDataday} barSize={25}>
+                          <XAxis type="category" dataKey="day" />
+                          <YAxis type="number" {...axisSettings} />
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="exits" fill="#82ca9d" name="Exits" />
+                        </BarChart>
+                      </ResponsiveContainer>]
+const charts3 = [
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={chartData} barSize={25}>
+      <XAxis type="category" dataKey="hour" />
+      <YAxis type="number" {...axisSettings} />
+      <CartesianGrid strokeDasharray="3 3" />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="entries" fill="#82ca9d" name="Entries" />
+    </BarChart>
+  </ResponsiveContainer>,
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={chartDataweek} barSize={25}>
+      <XAxis type="category" dataKey="week" />
+      <YAxis type="number" {...axisSettings} />
+      <CartesianGrid strokeDasharray="3 3" />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="entries" fill="#82ca9d" name="Entries" />
+    </BarChart>
+  </ResponsiveContainer>,
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={chartDatamonth} barSize={25}>
+      <XAxis type="category" dataKey="month" />
+      <YAxis type="number" {...axisSettings} />
+      <CartesianGrid strokeDasharray="3 3" />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="entries" fill="#82ca9d" name="Entries" />
+    </BarChart>
+  </ResponsiveContainer>,
+  <ResponsiveContainer width="100%" height={400}>
+    <BarChart data={chartDataday} barSize={25}>
+      <XAxis type="category" dataKey="day" />
+      <YAxis type="number" {...axisSettings} />
+      <CartesianGrid strokeDasharray="3 3" />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="entries" fill="#82ca9d" name="Entries" />
+    </BarChart>
+  </ResponsiveContainer>
+];
 
   useEffect(() => {
     // Simulate fetching data
@@ -191,6 +380,8 @@ const Analysis = () => {
       setDailyVisitorsData(data);
     };
 
+    
+
     fetchDayOfWeekData();
     fetchMonthlyData();
     fetchWeeklyData();
@@ -206,6 +397,54 @@ const Analysis = () => {
     localStorage.removeItem("role")
       navigate("../login")
 }
+const fetchPeakHoursData = () => {
+  const data = Array.from({ length: 10 }, (_, i) => ({
+    hour: `${8 + i}:00 - ${9 + i}:00`,
+    visitors: Math.floor(Math.random() * 200),
+  }));
+  setPeakHoursData(data);
+};
+
+const fetchDailyVisitorsData = () => {
+  const data = Array.from({ length: 10 }, (_, i) => ({
+    day: `2024-08-${String(i + 1).padStart(2, "0")}`,
+    visitors: Math.floor(Math.random() * 200),
+  }));
+  setDailyVisitorsData(data);
+};
+const fetchWeeklyData = () => {
+  const data = Array.from({ length: 4 }, (_, i) => ({
+    week: `Week ${i + 1}`,
+    visitors: Math.floor(Math.random() * 1000) + 100, // Random visitors between 100 and 1100
+  }));
+  setWeeklyData(data);
+};
+
+const fetchMonthlyData = () => {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const data = months.map((month) => ({
+    month,
+    visitors: Math.floor(Math.random() * 5000) + 500, // Random visitors between 500 and 5500
+  }));
+  setMonthlyData(data);
+};
+
+// Update data every 5 seconds
+useEffect(() => {
+  const updateData = () => {
+    // fetchDayOfWeekData();
+    fetchMonthlyData();
+    fetchWeeklyData();
+    fetchPeakHoursData();
+    fetchDailyVisitorsData();
+  };
+
+  updateData();
+  const intervalId = setInterval(updateData, 5000);
+
+  return () => clearInterval(intervalId); // Cleanup interval
+}, []);
+
 
   return (<>
   <div className='flex flex-col gap-10'>
@@ -244,10 +483,10 @@ const Analysis = () => {
             <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>FootFall</h2>
             <div className='flex justify-around w-full'>
 
-            <button onClick={()=>setChartNo(0)} className={`text-white font-mono w-1/5 text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out  ${chartNo==0 ?"bg-[#640000]":"bg-slate-500" } `}>DAY</button>
-            <button onClick={()=>setChartNo(1)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==1 ?"bg-[#640000]":"bg-slate-500" } `}>WEEK</button>
-            <button onClick={()=>setChartNo(2)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==2 ?"bg-[#640000]":"bg-slate-500" } `}>MONTH</button>
             <button onClick={()=>setChartNo(3)} className={`text-white font-mono w-1/5   text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==3 ?"bg-[#640000]":"bg-slate-500" } `}>HOURLY</button>
+            <button onClick={()=>setChartNo(0)} className={`text-white font-mono w-1/5 text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out  ${chartNo==0 ?"bg-[#640000]":"bg-slate-500" } `}>DAY</button>
+            <button onClick={()=>setChartNo(2)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==2 ?"bg-[#640000]":"bg-slate-500" } `}>WEEK</button>
+            <button onClick={()=>setChartNo(1)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo==1 ?"bg-[#640000]":"bg-slate-500" } `}>MONTH</button>
             </div>
           {/* <ResponsiveContainer width="100%" height={300}>
             <BarChart data={dayOfWeekData}>
@@ -278,10 +517,16 @@ const Analysis = () => {
               </div>
               <div className='flex '>
                 
-                        <div className="flex flex-col  items-center  gap-3 p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
+                        <div className="flex flex-col  gap-8  items-center   p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
                         <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Entries per Hour</h2>
-                
-                        <ResponsiveContainer width="100%" height={400}>
+                        <div className='flex justify-around w-full'>
+
+<button onClick={()=>setChartNo2(0)} className={`text-white font-mono w-1/5   text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo2==0 ?"bg-[#640000]":"bg-slate-500" } `}>HOURLY</button>
+<button onClick={()=>setChartNo2(1)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo2==1 ?"bg-[#640000]":"bg-slate-500" } `}>WEEK</button>
+<button onClick={()=>setChartNo2(2)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo2==2 ?"bg-[#640000]":"bg-slate-500" } `}>MONTH</button>
+<button onClick={()=>setChartNo2(3)} className={`text-white font-mono w-1/5 text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out  ${chartNo2==3 ?"bg-[#640000]":"bg-slate-500" } `}>DAY</button>
+</div>
+                        {/* <ResponsiveContainer width="100%" height={400}>
                           <BarChart data={chartData} barSize={25}>
                           <XAxis type="category" dataKey="hour" />
                           <YAxis type="number" {...axisSettings} />
@@ -289,21 +534,30 @@ const Analysis = () => {
                           <Legend />
                           <Bar dataKey="entries" fill="#8884d8" name="Entries" />
                           </BarChart>
-                        </ResponsiveContainer>
+                        </ResponsiveContainer> */}
+                        {charts3[chartNo2]}
                 
                       </div>
-                       <div className="flex  flex-col gap-3  items-center  p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
+                       <div className="flex  flex-col  gap-8  items-center   p-4 w-1/2 shadow-lg m-4 bg-white rounded-lg">
                             <h2 className='text-white font-mono text-lg bg-[#640000] px-3 py-1 rounded '>Exits per Hour</h2>
-                            <ResponsiveContainer width="100%" height={400}>
-                        <BarChart data={chartData} barSize={25}>
-                          <XAxis type="category" dataKey="hour" />
+                            <div className='flex justify-around w-full'>
+
+<button onClick={()=>setChartNo1(0)} className={`text-white font-mono w-1/5   text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo1==0 ?"bg-[#640000]":"bg-slate-500" } `}>HOURLY</button>
+<button onClick={()=>setChartNo1(1)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo1==1 ?"bg-[#640000]":"bg-slate-500" } `}>WEEK</button>
+<button onClick={()=>setChartNo1(2)} className={`text-white font-mono w-1/5  text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out ${chartNo1==2 ?"bg-[#640000]":"bg-slate-500" } `}>MONTH</button>
+<button onClick={()=>setChartNo1(3)} className={`text-white font-mono w-1/5 text-lg bg-[#640000] px-6 py-1 rounded hover:scale-110 ease-in-out  ${chartNo1==3 ?"bg-[#640000]":"bg-slate-500" } `}>DAY</button>
+</div>
+                            {/* <ResponsiveContainer width="100%" height={400}>
+                        <BarChart data={chartDatamonth} barSize={25}>
+                          <XAxis type="category" dataKey="month" />
                           <YAxis type="number" {...axisSettings} />
                           <CartesianGrid strokeDasharray="3 3" />
                           <Tooltip />
                           <Legend />
                           <Bar dataKey="exits" fill="#82ca9d" name="Exits" />
                         </BarChart>
-                      </ResponsiveContainer>
+                      </ResponsiveContainer> */}
+                      {charts2[chartNo1]}
                       
                              
                             </div>
